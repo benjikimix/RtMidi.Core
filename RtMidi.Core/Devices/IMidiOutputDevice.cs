@@ -94,5 +94,12 @@ namespace RtMidi.Core.Devices
         /// <param name="tuneRequestMessage"></param>
         /// <returns>True if sent, false otherwise</returns>
         bool Send(in TuneRequestMessage tuneRequestMessage);
+
+        /// <summary>
+        /// Send raw MIDI bytes
+        /// </summary>
+        /// <param name="bytes">Bytes buffer to read data from</param>
+        /// <returns>True if sent, false otherwise</returns>
+        bool Send(in byte[] bytes);
     }
 }
