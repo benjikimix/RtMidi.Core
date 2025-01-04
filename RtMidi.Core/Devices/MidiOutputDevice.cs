@@ -51,5 +51,8 @@ namespace RtMidi.Core.Devices
 
         public bool Send(in TuneRequestMessage tuneRequestMessage)
             => _outputDevice.SendMessage(tuneRequestMessage.Encode());
+
+        public bool Send(in byte[] bytes)
+            => _outputDevice.SendMessage(bytes);
     }
 }

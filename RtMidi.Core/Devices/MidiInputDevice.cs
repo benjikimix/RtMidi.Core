@@ -42,6 +42,7 @@ namespace RtMidi.Core.Devices
         public event SongPositionPointerHandler SongPositionPointer;
         public event SongSelectHandler SongSelect;
         public event TuneRequestHandler TuneRequest;
+        public event RawMessageHandler Raw;
 
         private void RtMidiInputDevice_Message(object sender, byte[] message)
         {
@@ -167,6 +168,9 @@ namespace RtMidi.Core.Devices
                     Log.Error("Unknown message type {Bitmask}", $"{status & 0b1111_0000:X2}");
                     break;
             }
+
+            // Also invoke raw message handler
+            Raw?.Invoke(this, in message);
         }
 
         protected override void Disposing()
