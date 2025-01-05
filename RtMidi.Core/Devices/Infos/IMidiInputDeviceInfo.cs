@@ -10,6 +10,6 @@
         /// </summary>
         /// <param name="ignoreMidiTime">Indicates if MIDI time events should be ignored</param>
         /// <returns>The device.</returns>
-        IMidiInputDevice CreateDevice(bool ignoreMidiTime = true);
+        IMidiInputDevice CreateDevice(bool ignoreMidiTime = true, bool onlyRaw = false);
     }
 }

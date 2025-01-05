@@ -13,11 +13,13 @@ namespace RtMidi.Core.Devices
         private readonly IRtMidiInputDevice _inputDevice;
         private readonly NrpnInterpreter[] _nrpnInterpreters;
         private List<byte> _sysExBuffer;
+        private readonly bool _onlyRaw;
 
-        public MidiInputDevice(IRtMidiInputDevice rtMidiInputDevice, string name) : base(rtMidiInputDevice, name)
+        public MidiInputDevice(IRtMidiInputDevice rtMidiInputDevice, string name, bool onlyRaw = false) : base(rtMidiInputDevice, name)
         {
             _inputDevice = rtMidiInputDevice;
             _inputDevice.Message += RtMidiInputDevice_Message;
+            _onlyRaw = onlyRaw;
 
             _nrpnInterpreters = new NrpnInterpreter[16];
             for (var i = 0; i < 16; i++)
@@ -72,6 +74,11 @@ namespace RtMidi.Core.Devices
 
         private void Decode(byte[] message)
         {
+            // Also invoke raw message handler
+            Raw?.Invoke(this, in message);
+
+            if (_onlyRaw) return;
+
             if (_sysExBuffer != null)
             {
                 _sysExBuffer.AddRange(message);
@@ -168,9 +175,6 @@ namespace RtMidi.Core.Devices
                     Log.Error("Unknown message type {Bitmask}", $"{status & 0b1111_0000:X2}");
                     break;
             }
-
-            // Also invoke raw message handler
-            Raw?.Invoke(this, in message);
         }
 
         protected override void Disposing()
