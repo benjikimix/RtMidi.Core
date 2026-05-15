@@ -76,3 +76,4 @@ Thumbs.db
 **/.idea/**/*.iml
 **/.idea/**/contentModel.xml
 **/.idea/**/modules.xml
+*.csproj.lscache
