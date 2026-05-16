@@ -6,9 +6,9 @@
         {
         }
 
-        public IRtMidiInputDevice CreateDevice()
+        public IRtMidiInputDevice CreateDevice(bool ignoreMidiTime = true)
         {
-            return new RtMidiInputDevice(Port);
+            return new RtMidiInputDevice(Port, ignoreMidiTime);
         }
     }
 }

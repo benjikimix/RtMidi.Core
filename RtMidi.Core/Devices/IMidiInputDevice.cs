@@ -75,6 +75,11 @@ namespace RtMidi.Core.Devices
         /// Tune Request event
         /// </summary>
         event TuneRequestHandler TuneRequest;
+
+        /// <summary>
+        /// Raw MIDI bytes event
+        /// </summary>
+        event RawMessageHandler Raw;
     }
 
     public delegate void NoteOffMessageHandler(IMidiInputDevice sender, in NoteOffMessage msg);
@@ -102,4 +107,6 @@ namespace RtMidi.Core.Devices
     public delegate void SongSelectHandler(IMidiInputDevice sender, in SongSelectMessage msg);
 
     public delegate void TuneRequestHandler(IMidiInputDevice sender, in TuneRequestMessage msg);
+
+    public delegate void RawMessageHandler(IMidiInputDevice sender, in byte[] bytes);
 }

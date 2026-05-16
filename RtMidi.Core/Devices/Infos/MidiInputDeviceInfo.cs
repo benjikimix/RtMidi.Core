@@ -7,9 +7,9 @@ namespace RtMidi.Core.Devices.Infos
         {
         }
 
-        public IMidiInputDevice CreateDevice()
+        public IMidiInputDevice CreateDevice(bool ignoreMidiTime = true, bool onlyRaw = false)
         {
-            return new MidiInputDevice(RtMidiDeviceInfo.CreateDevice(), Name);
+            return new MidiInputDevice(RtMidiDeviceInfo.CreateDevice(ignoreMidiTime), Name, onlyRaw);
         }
     }
 }

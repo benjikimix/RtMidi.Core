@@ -11,9 +11,15 @@ namespace RtMidi.Core.Unmanaged.Devices
         /// </summary>
         private readonly RtMidiCallback _rtMidiCallbackDelegate;
 
-        internal RtMidiInputDevice(uint portNumber) : base(portNumber)
+        /// <summary>
+        /// Indicates if the MIDI input device should ignore MIDI time events
+        /// </summary>
+        private readonly bool _ignoreMidiTime = true;
+
+        internal RtMidiInputDevice(uint portNumber, bool ignoreMidiTime = true) : base(portNumber)
         {
             _rtMidiCallbackDelegate = HandleRtMidiCallback;
+            _ignoreMidiTime = ignoreMidiTime;
         }
 
         public event EventHandler<byte[]> Message;
@@ -28,7 +34,7 @@ namespace RtMidi.Core.Unmanaged.Devices
                 CheckForError(handle);
 
                 Log.Debug("Setting types to ignore");
-                RtMidiC.Input.IgnoreTypes(handle, false, true, true);
+                RtMidiC.Input.IgnoreTypes(handle, false, _ignoreMidiTime, true);
                 CheckForError(handle);
 
                 Log.Debug("Setting input callback");
