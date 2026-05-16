@@ -14,6 +14,8 @@ namespace RtMidi.Core.Unmanaged.API
 
     internal static class RtMidiC
     {
+        static RtMidiC() => RtMidiNativeLibraryLoader.TryLoad();
+
         private static bool Is64Bit => IntPtr.Size == 8;
         
         /// <summary>

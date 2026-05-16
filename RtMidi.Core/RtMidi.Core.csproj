@@ -23,6 +23,16 @@
             <PackagePath>build\</PackagePath>
             <Pack>true</Pack>
         </None>
+        <None Include="librtmidi.darwin-x64.dylib">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <PackagePath>build\</PackagePath>
+            <Pack>true</Pack>
+        </None>
+        <None Include="librtmidi.darwin-arm64.dylib">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <PackagePath>build\</PackagePath>
+            <Pack>true</Pack>
+        </None>
         <None Include="rtmidi.dll">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
             <PackagePath>build\</PackagePath>
