@@ -4,7 +4,7 @@ We are using a fork of [rtmidi](https://github.com/micdah/rtmidi) where the `rtm
 better usage with _RtMidi.Core_.
 
 The fork is regularly merged with _upstream_, ensuring fixes, improvements etc are carried over into the version we are
-using. 
+using.
 
 ## Compiling
 
@@ -14,15 +14,23 @@ Guides on how to compile the runtime-dependent library binary.
 
 1. Open terminal and navigate to the root of the repository
 1. Compile project:
-    ```bash
-    $ ./autogen.sh --no-configure
-    $ ./configure
-    $ make
-    ```
-1. Copy the newly compiled `dylib` file into the _RtMidi.Core_ project:
-    ```bash
-    $ cp .libs/librtmidi.dylib ~/git/RtMidi.Core/RtMidi.Core/librtmidi.dylib
-    ```
+   ```bash
+   $ ./autogen.sh --no-configure
+   $ ./configure
+   $ make
+   ```
+1. Copy the newly compiled `dylib` file into the _RtMidi.Core_ project. For cross-platform builds, keep both Apple silicon and Intel builds side by side as separate files:
+
+   ```bash
+   $ cp .libs/librtmidi.dylib ~/git/RtMidi.Core/RtMidi.Core/librtmidi.darwin-x64.dylib
+   $ cp .libs/librtmidi.dylib ~/git/RtMidi.Core/RtMidi.Core/librtmidi.darwin-arm64.dylib
+   ```
+
+   If you also want a fallback default file, copy one of the binaries to:
+
+   ```bash
+   $ cp .libs/librtmidi.dylib ~/git/RtMidi.Core/RtMidi.Core/librtmidi.dylib
+   ```
 
 #### Pre-requisites
 
@@ -32,7 +40,6 @@ Requires `automake`, `autoconf` and `libtool` to be installed, which is easily d
 $ brew install autoconf automake libtool
 ```
 
-
 ### Windows (64 bit)
 
 1. From the root of the repository, navigate to `msw/`
@@ -41,35 +48,35 @@ $ brew install autoconf automake libtool
 1. Change target framework to _**x64**_
 1. Build solution
 1. Copy newly compiled `dll` file for x64 into the _RtMidi.Core_ project:
-    ```bash
-    $ cp msw/x64/Export/rtmidilib.dll ~/git/RtMidi.Core/RtMidi.Core/librtmidi.dylib
-    ```
+   ```bash
+   $ cp msw/x64/Export/rtmidilib.dll ~/git/RtMidi.Core/RtMidi.Core/librtmidi.dylib
+   ```
 1. Change target framework to _**Win32**_
 1. Build solution
 1. Copy newly compiled `dll` file for x86 into the _RtMidi.Core_ project:
-    ```bash
-    $ cp msw/Export/rtmidilib.dll ~/git/RtMidi.Core/RtMidi.Core/rtmidi32.dll
-    ```
+   ```bash
+   $ cp msw/Export/rtmidilib.dll ~/git/RtMidi.Core/RtMidi.Core/rtmidi32.dll
+   ```
 
 #### Pre-requisites
 
 Requires Visual Studio 2017 (_or newer_) with the following components installed (_use Visual Studio Installer_)
 
-* Workload: Desktop development with C++
-* Individual components:
-  * Windows 8.1 SDK
-  * Windows Universal CRT SDK
+- Workload: Desktop development with C++
+- Individual components:
+  - Windows 8.1 SDK
+  - Windows Universal CRT SDK
 
 ### Linux
 
 1. Open terminal and navigate to the root of the repository
 1. Compile project:
-    ```bash
-    $ ./autogen.sh
-    $ ./configure
-    $ make
-    ```
+   ```bash
+   $ ./autogen.sh
+   $ ./configure
+   $ make
+   ```
 1. Copy the newly compiled `so` file into the _RtMidi.Core_ project:
-    ```bash
-    $ cp .libs/librtmidi.so ~/git/RtMidi.Core/RtMidi.Core/librtmidi.so
-    ```
+   ```bash
+   $ cp .libs/librtmidi.so ~/git/RtMidi.Core/RtMidi.Core/librtmidi.so
+   ```

@@ -19,6 +19,16 @@
     </PropertyGroup>
     <ItemGroup>
         <None Include="librtmidi.dylib">
+            <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+            <PackagePath>build\</PackagePath>
+            <Pack>true</Pack>
+        </None>
+        <None Include="librtmidi.darwin-x64.dylib">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <PackagePath>build\</PackagePath>
+            <Pack>true</Pack>
+        </None>
+        <None Include="librtmidi.darwin-arm64.dylib">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
             <PackagePath>build\</PackagePath>
             <Pack>true</Pack>
