@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
 
@@ -31,19 +32,15 @@ namespace RtMidi.Core.Unmanaged
                     return;
                 }
 
-                var libraryFileName = GetDarwinLibraryFileName(RuntimeInformation.ProcessArchitecture);
-                var path = Path.Combine(AppContext.BaseDirectory, libraryFileName);
+                var path = FindNativeLibraryPath();
 
-                if (!File.Exists(path))
-                {
-                    path = Path.Combine(AppContext.BaseDirectory, "librtmidi.dylib");
-                }
-
-                if (!File.Exists(path))
+                if (path == null)
                 {
                     _initialized = true;
                     return;
                 }
+
+                path = EnsureGenericLibraryName(path);
 
                 var handle = dlopen(path, RtlNow | RtlGlobal);
                 _initialized = true;
@@ -56,14 +53,92 @@ namespace RtMidi.Core.Unmanaged
             }
         }
 
-        private static string GetDarwinLibraryFileName(Architecture architecture)
+        private static string FindNativeLibraryPath()
         {
-            return architecture switch
+            var baseDirectory = AppContext.BaseDirectory;
+            var assemblyDirectory = Path.GetDirectoryName(typeof(RtMidiNativeLibraryLoader).Assembly.Location);
+
+            var searchDirectories = new List<string>
             {
-                Architecture.Arm64 => "librtmidi.darwin-arm64.dylib",
-                Architecture.X64 => "librtmidi.darwin-x64.dylib",
-                _ => "librtmidi.dylib",
+                baseDirectory,
+                assemblyDirectory,
             };
+
+            if (!string.IsNullOrEmpty(baseDirectory))
+            {
+                searchDirectories.Add(Path.Combine(baseDirectory, "runtimes", "osx-arm64", "native"));
+                searchDirectories.Add(Path.Combine(baseDirectory, "runtimes", "osx-x64", "native"));
+            }
+
+            if (!string.IsNullOrEmpty(assemblyDirectory))
+            {
+                searchDirectories.Add(Path.Combine(assemblyDirectory, "runtimes", "osx-arm64", "native"));
+                searchDirectories.Add(Path.Combine(assemblyDirectory, "runtimes", "osx-x64", "native"));
+            }
+
+            foreach (var directory in searchDirectories)
+            {
+                if (string.IsNullOrEmpty(directory))
+                {
+                    continue;
+                }
+
+                foreach (var candidate in GetDarwinLibraryFileNames(RuntimeInformation.ProcessArchitecture))
+                {
+                    var path = Path.Combine(directory, candidate);
+                    if (File.Exists(path))
+                    {
+                        return path;
+                    }
+                }
+            }
+
+            return null;
+        }
+
+        private static string EnsureGenericLibraryName(string selectedPath)
+        {
+            if (string.IsNullOrEmpty(selectedPath))
+            {
+                return selectedPath;
+            }
+
+            if (string.Equals(Path.GetFileName(selectedPath), "librtmidi.dylib", StringComparison.OrdinalIgnoreCase))
+            {
+                return selectedPath;
+            }
+
+            var directory = Path.GetDirectoryName(selectedPath);
+            if (string.IsNullOrEmpty(directory))
+            {
+                return selectedPath;
+            }
+
+            var genericPath = Path.Combine(directory, "librtmidi.dylib");
+            try
+            {
+                File.Copy(selectedPath, genericPath, true);
+                return genericPath;
+            }
+            catch
+            {
+                return selectedPath;
+            }
+        }
+
+        private static IEnumerable<string> GetDarwinLibraryFileNames(Architecture architecture)
+        {
+            switch (architecture)
+            {
+                case Architecture.Arm64:
+                    yield return "librtmidi.darwin-arm64.dylib";
+                    break;
+                case Architecture.X64:
+                    yield return "librtmidi.darwin-x64.dylib";
+                    break;
+            }
+
+            yield return "librtmidi.dylib";
         }
 
         private static string GetDlErrorMessage(IntPtr messagePtr)
